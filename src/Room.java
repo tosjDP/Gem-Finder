@@ -32,14 +32,6 @@ public class Room
         this.description = description;
     }
 
-    /**
-     * Define the exits of this room.  Every direction either leads
-     * to another room or is null (no exit there).
-     * @param north The north exit.
-     * @param east The east east.
-     * @param south The south exit.
-     * @param west The west exit.
-     */
 
     public void setExit(String direction, Room room) {
         if (room!=null) exits.put(direction, room);
@@ -63,6 +55,10 @@ public class Room
             returnString += direction + " ";
         }
         return returnString;
+    }
+
+    public String getLongDescription() {
+        return "You are " + getDescription() + System.lineSeparator() + getExitString();
     }
 
 }

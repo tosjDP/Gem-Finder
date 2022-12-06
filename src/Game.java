@@ -91,9 +91,7 @@ public class Game
     }
 
     private void printLocationInfo() {
-        System.out.println("You are " + currentRoom.getDescription());
-        System.out.println(currentRoom.getExitString());
-
+        System.out.println(currentRoom.getLongDescription());
         System.out.println();
     }
 
@@ -118,6 +116,12 @@ public class Game
         else if (commandWord.equals("go")) {
             goRoom(command);
         }
+        else if (commandWord.equals("look")) {
+            look();
+        }
+        else if (commandWord.equals("eat")) {
+            eat();
+        }
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
         }
@@ -138,7 +142,15 @@ public class Game
         System.out.println("around at the university.");
         System.out.println();
         System.out.println("Your command words are:");
-        System.out.println("   go quit help");
+        System.out.println("   " + parser.showCommands());
+    }
+
+    private void look() {
+        System.out.println(currentRoom.getLongDescription());
+    }
+
+    private void eat() {
+        System.out.println("You have eaten and you're not hungry anymore");
     }
 
     /** 
