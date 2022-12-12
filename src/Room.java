@@ -38,6 +38,25 @@ public class Room
         if (item!=null) items.add(item);
     }
 
+    public boolean hasItem(String name) {
+        for(Item i : items) {
+            if (i.getName().equals(name)) return true;
+        }
+        return false;
+    }
+
+    public Item getItem(String name) {
+        Item foundItem = null;
+        for(Item i : items) {
+            if (i.getName().equals(name)) {
+                foundItem = i;
+                break;
+            }
+        }
+        if (foundItem!=null && foundItem.isMoveable()) items.remove(foundItem);
+        return foundItem;
+    }
+
     public void setExit(String direction, Room room) {
         if (room!=null) exits.put(direction, room);
     }

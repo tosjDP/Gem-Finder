@@ -43,6 +43,7 @@ public class Game
         promoboard = new Item("promoboard", "university promoboard",  3.2);
         ashtray = new Item("ashtray", "big yellow ashtray", 4.6);
         outside.addItem(promoboard);
+        promoboard.setMoveable(false);
         outside.addItem(ashtray);
         theater = new Room("in a lecture theater");
         pub = new Room("in the campus pub");
@@ -101,6 +102,7 @@ public class Game
 
     private void printLocationInfo() {
         System.out.println(player.getName() + " is " + player.getCurrentRoom().getLongDescription());
+        System.out.println(player.getBagDescription());
         System.out.println();
     }
 
@@ -118,26 +120,26 @@ public class Game
             return false;
         }
 
-        String commandWord = command.getCommandWord();
+        CommandWord commandWord = command.getCommandWord();
         switch (commandWord) {
-            case "help":
+            case HELP:
                 printHelp();
                 break;
-            case "go":
+            case GO:
                 goRoom(command);
                 break;
-            case "take":
+            case TAKE:
                 take(command);
                 break;
-            case "drop":
+            case DROP:
                 break;
-            case "look":
+            case LOOK:
                 look();
                 break;
-            case "eat":
+            case EAT:
                 eat();
                 break;
-            case "quit":
+            case QUIT:
                 wantToQuit = quit(command);
                 break;
             default:
@@ -152,10 +154,16 @@ public class Game
             return;
         }
 
-        if (player.take(command.getSecondWord())) {
-            System.out.println("Success!");
+        int result = player.take(command.getSecondWord());
+        if (result==Player.ITEM_GONE) {
+            printLocationInfo();
         } else {
-            System.out.println("Can't find " + command.getSecondWord());
+            if (result==Player.ITEM_NOTMOVEABLE) {
+                System.out.println("Item " + command.getSecondWord() + " is not moveable");
+            } else {
+                System.out.println("Can't find " + command.getSecondWord());
+            }
+
         }
     }
     // implementations of user commands:
