@@ -18,13 +18,14 @@
 public class Game
 {
     private Parser parser;
-    private Room currentRoom;
+    private Player player;
         
     /**
      * Create the game and initialise its internal map.
      */
     public Game() 
     {
+        player = new Player("Jos");
         createRooms();
         parser = new Parser();
     }
@@ -35,9 +36,14 @@ public class Game
     private void createRooms()
     {
         Room outside, theater, pub, lab, office, cellar;
+        Item ashtray, promoboard;
       
         // create the rooms
         outside = new Room("outside the main entrance of the university");
+        promoboard = new Item("promoboard", "university promoboard",  3.2);
+        ashtray = new Item("ashtray", "big yellow ashtray", 4.6);
+        outside.addItem(promoboard);
+        outside.addItem(ashtray);
         theater = new Room("in a lecture theater");
         pub = new Room("in the campus pub");
         lab = new Room("in a computing lab");
@@ -56,7 +62,10 @@ public class Game
         lab.setExit("east", office);
         office.setExit("west", lab);
 
-        currentRoom = outside;  // start game outside
+        cellar.addItem(new Item("rum", "a barrel of rum", 10.7));
+        cellar.addItem(new Item("water", "a crate bottles of water", 12.2));
+
+        player.setCurrentRoom(outside);  // start game outside
     }
 
     /**
@@ -91,7 +100,7 @@ public class Game
     }
 
     private void printLocationInfo() {
-        System.out.println(currentRoom.getLongDescription());
+        System.out.println(player.getName() + " is " + player.getCurrentRoom().getLongDescription());
         System.out.println();
     }
 
@@ -138,19 +147,19 @@ public class Game
      */
     private void printHelp() 
     {
-        System.out.println("You are lost. You are alone. You wander");
+        System.out.println(player.getName() + " is lost. " + player.getName() + " is alone. He wanders");
         System.out.println("around at the university.");
         System.out.println();
-        System.out.println("Your command words are:");
+        System.out.println("His command words are:");
         System.out.println("   " + parser.showCommands());
     }
 
     private void look() {
-        System.out.println(currentRoom.getLongDescription());
+        System.out.println(player.getCurrentRoom().getLongDescription());
     }
 
     private void eat() {
-        System.out.println("You have eaten and you're not hungry anymore");
+        System.out.println(player.getName() + " has eaten and is not hungry anymore");
     }
 
     /** 
@@ -168,13 +177,13 @@ public class Game
         String direction = command.getSecondWord();
 
         // Try to leave current room.
-        Room nextRoom = currentRoom.getExit(direction);
+        Room nextRoom = player.getCurrentRoom().getExit(direction);
 
         if (nextRoom == null) {
             System.out.println("There is no door!");
         }
         else {
-            currentRoom = nextRoom;
+            player.setCurrentRoom(nextRoom);
             printLocationInfo();
         }
     }
