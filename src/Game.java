@@ -119,25 +119,45 @@ public class Game
         }
 
         String commandWord = command.getCommandWord();
-        if (commandWord.equals("help")) {
-            printHelp();
-        }
-        else if (commandWord.equals("go")) {
-            goRoom(command);
-        }
-        else if (commandWord.equals("look")) {
-            look();
-        }
-        else if (commandWord.equals("eat")) {
-            eat();
-        }
-        else if (commandWord.equals("quit")) {
-            wantToQuit = quit(command);
+        switch (commandWord) {
+            case "help":
+                printHelp();
+                break;
+            case "go":
+                goRoom(command);
+                break;
+            case "take":
+                take(command);
+                break;
+            case "drop":
+                break;
+            case "look":
+                look();
+                break;
+            case "eat":
+                eat();
+                break;
+            case "quit":
+                wantToQuit = quit(command);
+                break;
+            default:
         }
 
         return wantToQuit;
     }
 
+    private void take(Command command) {
+        if (!command.hasSecondWord()) {
+            System.out.println("Take what?");
+            return;
+        }
+
+        if (player.take(command.getSecondWord())) {
+            System.out.println("Success!");
+        } else {
+            System.out.println("Can't find " + command.getSecondWord());
+        }
+    }
     // implementations of user commands:
 
     /**
@@ -155,7 +175,7 @@ public class Game
     }
 
     private void look() {
-        System.out.println(player.getCurrentRoom().getLongDescription());
+        System.out.println(player.getName() + " is " + player.getCurrentRoom().getLongDescription());
     }
 
     private void eat() {
