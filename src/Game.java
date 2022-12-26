@@ -19,6 +19,7 @@ public class Game
 {
     private Parser parser;
     private Player player;
+    private Floor floor;
         
     /**
      * Create the game and initialise its internal map.
@@ -26,48 +27,51 @@ public class Game
     public Game() 
     {
         player = new Player("Jos");
-        createRooms();
+        //createRooms();
         parser = new Parser();
+        floor = new Floor(1);
+        player.setCurrentRoom(floor.getRooms()[0][0]);
+
     }
 
     /**
      * Create all the rooms and link their exits together.
      */
-    private void createRooms()
-    {
-        Room outside, theater, pub, lab, office, cellar;
-        Item ashtray, promoboard;
-      
-        // create the rooms
-        outside = new Room("outside the main entrance of the university");
-        promoboard = new Item("promoboard", "university promoboard",  3.2);
-        ashtray = new Item("ashtray", "big yellow ashtray", 4.6);
-        outside.addItem(promoboard);
-        promoboard.setMoveable(false);
-        outside.addItem(ashtray);
-        theater = new Room("in a lecture theater");
-        pub = new Room("in the campus pub");
-        lab = new Room("in a computing lab");
-        office = new Room("in the computing admin office");
-        cellar = new Room("the cellar with stock for the pub");
-        
-        // initialise room exits
-        outside.setExit("east", theater);
-        outside.setExit("south", lab);
-        outside.setExit("west", pub);
-        theater.setExit("west", outside);
-        pub.setExit("east", outside);
-        pub.setExit("down", cellar);
-        cellar.setExit("up", pub);
-        lab.setExit("north", outside);
-        lab.setExit("east", office);
-        office.setExit("west", lab);
-
-        cellar.addItem(new Item("rum", "a barrel of rum", 10.7));
-        cellar.addItem(new Item("water", "a crate bottles of water", 12.2));
-
-        player.setCurrentRoom(outside);  // start game outside
-    }
+//    private void createRooms()
+//    {
+//        Room outside, theater, pub, lab, office, cellar;
+//        Item ashtray, promoboard;
+//
+//        // create the rooms
+//        outside = new Room("outside the main entrance of the university");
+//        promoboard = new Item("promoboard", "university promoboard",  3.2);
+//        ashtray = new Item("ashtray", "big yellow ashtray", 4.6);
+//        outside.addItem(promoboard);
+//        promoboard.setMoveable(false);
+//        outside.addItem(ashtray);
+//        theater = new Room("in a lecture theater");
+//        pub = new Room("in the campus pub");
+//        lab = new Room("in a computing lab");
+//        office = new Room("in the computing admin office");
+//        cellar = new Room("the cellar with stock for the pub");
+//
+//        // initialise room exits
+//        outside.setExit("east", theater);
+//        outside.setExit("south", lab);
+//        outside.setExit("west", pub);
+//        theater.setExit("west", outside);
+//        pub.setExit("east", outside);
+//        pub.setExit("down", cellar);
+//        cellar.setExit("up", pub);
+//        lab.setExit("north", outside);
+//        lab.setExit("east", office);
+//        office.setExit("west", lab);
+//
+//        cellar.addItem(new Item("rum", "a barrel of rum", 10.7));
+//        cellar.addItem(new Item("water", "a crate bottles of water", 12.2));
+//
+//        player.setCurrentRoom(outside);  // start game outside
+//    }
 
     /**
      *  Main play routine.  Loops until end of play.

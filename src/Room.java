@@ -1,3 +1,5 @@
+import enums.RoomType;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,6 +23,18 @@ public class Room
     private String description;
     private HashMap<String, Room> exits;
     private ArrayList<Item> items = new ArrayList<>();
+    RoomType type;
+    private int x;
+    private int y;
+    private Floor floor;
+
+    public int getY() {
+        return y;
+    }
+
+    public int getX() {
+        return x;
+    }
 
     /**
      * Create a room described "description". Initially, it has
@@ -28,10 +42,14 @@ public class Room
      * "an open court yard".
      * @param description The room's description.
      */
-    public Room(String description) 
+    public Room(String description, RoomType type,int x,int y,Floor floor)
     {
         exits = new HashMap<>();
         this.description = description;
+        this.type=type;
+        this.y=y;
+        this.x=x;
+        this.floor=floor;
     }
 
     public void addItem(Item item) {
