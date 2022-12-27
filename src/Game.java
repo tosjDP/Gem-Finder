@@ -1,3 +1,8 @@
+import enums.ItemType;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
@@ -20,17 +25,29 @@ public class Game
     private Parser parser;
     private Player player;
     private Floor floor;
+    public static Map<ItemType, String[]> items=new HashMap<>();
+
+
         
     /**++
      * Create the game and initialise its internal map.
      */
     public Game() 
     {
-        player = new Player("Jos");
-        //createRooms();
         parser = new Parser();
-        floor = new Floor(1);
+        player = new Player("Jos");
+        items.put(ItemType.FOOD,new String[]{"sfesfe","wedfqwdqd","ddawdawd"});
+        items.put(ItemType.GEM,new String[]{"ddaw","wedfqwdqd","ddawdawd"});
+        items.put(ItemType.POTION,new String[]{"ddaw","wedfqwdqd","ddawdawd"});
+        items.put(ItemType.HAT,new String[]{"ddaw","wedfqwdqd","ddawdawd"});
+        items.put(ItemType.TORCH,new String[]{"ddaw","wedfqwdqd","ddawdawd"});
+        items.put(ItemType.BONES,new String[]{"ddaw","wedfqwdqd","ddawdawd"});
+        items.put(ItemType.GOLD,new String[]{"ddaw","wedfqwdqd","ddawdawd"});
+
+        floor = new Floor(1,6,5,items);
         player.setCurrentRoom(floor.getRooms()[0][0]);
+
+
 
     }
 

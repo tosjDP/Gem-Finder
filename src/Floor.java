@@ -1,24 +1,30 @@
+import enums.ItemType;
 import enums.RoomType;
 
-import java.util.ArrayList;
+import java.lang.reflect.Array;
+import java.util.Map;
 import java.util.Random;
 
 public class Floor {
     private int currentFloor;
-    private int floorSize = 5;
+    private int floorSize;
+    private int itemsPerFloor;
     private Room[][] rooms = new Room[floorSize][floorSize];
+    private Map<ItemType, String[]> items;
 
     public Room[][] getRooms() {
         return rooms;
     }
 
-    public Floor(int currentFloor) {
+    public Floor(int currentFloor, int itemsPerFloor, int floorSize,  Map<ItemType, String[]>items) {
         this.currentFloor = currentFloor;
-        this.GenerateRooms();
-        System.out.println("test");
+        this.itemsPerFloor=itemsPerFloor;
+        this.floorSize=floorSize;
+        this.items=items;
+        this.generateRooms();
     }
 
-    private void GenerateRooms(){
+    private void generateRooms(){
         for (int i = 0; i < floorSize; i++) {
             for (int j = 0; j < floorSize; j++) {
                 RoomType type = RoomType.values()[new Random().nextInt(RoomType.values().length)];
@@ -80,4 +86,15 @@ public class Floor {
             }
         }
     }
+    private void assignItemToRoom(){
+        for (int i = 0; i < itemsPerFloor; i++) {
+            int x = (int) Math.floor(Math.random()*(floorSize));
+            int y = (int) Math.floor(Math.random()*(floorSize));
+            String itemName = ItemType.values()[new Random().nextInt(ItemType.values().length)].name();
+            String description = items.get(itemName)[ (int)Math.floor(Math.random()*3)];
+            Item newitem = new Item(itemName,description, Math.floor(Math.random()*5));
+            this.rooms[x][y].addItem(newitem);
+        }
+    }
+
 }
