@@ -23,7 +23,8 @@ public class Game
 {
     private Parser parser;
     private Player player;
-    private Floor floor;
+    private ArrayList<Floor> floors =new ArrayList<>();
+    private Floor currentFloor;
     public static ArrayList<Item> items=new ArrayList<>();
 
 
@@ -35,8 +36,12 @@ public class Game
         parser = new Parser();
         player = new Player("Jos");
         initializeData();
-        floor = new Floor(1,3,2,2,items);
-        player.setCurrentRoom(floor.getRooms()[0][0]);
+        floors.add(new Floor(1,10,5,1,items));
+        floors.add(new Floor(1,10,5,1,items));
+        floors.add(new Floor(1,10,5,1,items));
+        floors.add(new Floor(1,10,5,1,items));
+        currentFloor = floors.get(0);
+        player.setCurrentRoom(currentFloor.getRooms()[3][3]);
 
     }
     /**
@@ -71,6 +76,7 @@ public class Game
     }
 
     private void printLocationInfo() {
+        System.out.println("currentfloor: " + floors.indexOf(currentFloor));
         System.out.println(player.getName() + " is " + player.getCurrentRoom().getLongDescription());
         System.out.println(player.getBagDescription());
         System.out.println();
@@ -166,7 +172,6 @@ public class Game
      */
     private void goRoom(Command command)
     {
-        String back = "back";
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
             System.out.println("Go where?");
@@ -188,6 +193,17 @@ public class Game
         else {
             player.setCurrentRoom(nextRoom);
             printLocationInfo();
+            if (player.isCanGoNextFloor()){
+                int index = floors.indexOf(currentFloor);
+                if (index == floors.size()-1){
+                    //add win statement
+                }
+                else{
+                    currentFloor = floors.get(index++);
+                    player.setCurrentRoom(currentFloor.getRooms()[0][0]);
+                    player.setCanGoNextFloor(false);
+                }
+            }
         }
     }
 
@@ -212,13 +228,26 @@ public class Game
         game.play();
     }
     private void initializeData(){
-        items.add(new Item("cake","hmm jummy cake",8));
-        items.add(new Item("Fedora","cool blue color",3.7));
-        items.add(new Item("Key","Shiny new key, seems to open a door",5));
-//        items.add(new Item("Bones","Bones of a human that has tried to escape but failed",5.7));
-//        items.add(new Item("bucket","Bucket with some holes in it",3.4));
-//        items.add(new Item("Torch","giving a easing glow",1.9));
-//        items.add(new Item("Rock","Sturdy and heavy",9.3));
-
+        items.add(new Item("cake","hmm jummy cake",0.5));
+        items.add(new Item("Fedora","youre a real chad if you wear one of these",0.2));
+        items.add(new Item("candle","a non lit candle..to bad",0.1));
+        items.add(new Item("Bones","Bones of a human that has tried to escape but failed",3.2));
+        items.add(new Item("bucket","Bucket with some holes in it",0.75));
+        items.add(new Item("Torch","giving a easing glow",1.5));
+        items.add(new Item("Rock","Sturdy and heavy",9.3));
+        items.add(new Item("pocketwatch","a beautifull golden pocketwatch, broken sadly engouh",0.2));
+        items.add(new Item("book of spells","an old book covered in dust, what secrets does it hold?",0.5));
+        items.add(new Item("book of prayer","a gold plated book with holy transcripst",0.5));
+        items.add(new Item("giants sword","a sword that must have been from giant race, youre not carringy this one",50));
+        items.add(new Item("chest","a dirty old chest",50));
+        items.add(new Item("mushroomhat","a hat made from a mushroom or a mushroom made from a hat ?",0.25));
+        items.add(new Item("wooden stake","i hope i wont need this...",0.15));
+        items.add(new Item("pile of gold ","its free real estate",4));
+        items.add(new Item("skeleton","a deceased adventurer looks like he took an arrow to the knee...",25));
+        items.add(new Item("amazon package","somehow this seems vagely familiar",2));
+        items.add(new Item("bag of doritos","ooo cheese flavour the best",0.2));
+        items.add(new Item("shield","a wooden shield with metal pieces",3));
+        items.add(new Item("crimson flask of tears","a haunting red liquid is inside this flask, should you drink it?",0.25));
+        items.add(new Item("stick of C4","this doesnt seem out of place at all",2.5));
     }
 }
