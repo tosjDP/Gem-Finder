@@ -6,6 +6,7 @@ public class Player {
     public static final int ITEM_NOTMOVEABLE = 2;
     private String name;
     private Room currentRoom;
+    private Room previousRoom;
     private ArrayList<Item> bag = new ArrayList<>();
 
     public Player(String name) {
@@ -31,8 +32,14 @@ public class Player {
     }
 
     public void setCurrentRoom(Room currentRoom) {
+        this.previousRoom = this.currentRoom;
         this.currentRoom = currentRoom;
     }
+    public void goBack(){
+        this.currentRoom = this.previousRoom;
+        System.out.println();
+    }
+
 
     public String getBagDescription() {
         if (bag.isEmpty()) {
