@@ -1,24 +1,34 @@
 import enums.RoomType;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Random;
 
 public class Floor {
     private int currentFloor;
-    private int floorSize = 5;
-    private Room[][] rooms = new Room[floorSize][floorSize];
+    private int floorSize;
+    private int itemsPerFloor;
+    private int maxItemsPerRoom;
+    private Room[][] rooms;
+    private ArrayList<Item> items;
 
     public Room[][] getRooms() {
         return rooms;
     }
 
-    public Floor(int currentFloor) {
+    public Floor(int currentFloor, int itemsPerFloor, int floorSize,int maxItemsPerRoom, ArrayList<Item>items) {
         this.currentFloor = currentFloor;
-        this.GenerateRooms();
-        System.out.println("test");
+        this.itemsPerFloor=itemsPerFloor;
+        this.floorSize=floorSize;
+        this.items=items;
+        this.maxItemsPerRoom=maxItemsPerRoom;
+        this.rooms=new Room[floorSize][floorSize];
+        this.generateRooms();
+        this.assignItemToRoom();
     }
 
-    private void GenerateRooms(){
+    private void generateRooms(){
         for (int i = 0; i < floorSize; i++) {
             for (int j = 0; j < floorSize; j++) {
                 RoomType type = RoomType.values()[new Random().nextInt(RoomType.values().length)];
@@ -80,4 +90,21 @@ public class Floor {
             }
         }
     }
+    private void assignItemToRoom(){
+        for (int i = 0; i < itemsPerFloor; i++) {
+            while (items.size() > 0){
+                int x = (int) Math.floor(Math.random()*(floorSize));
+                int y = (int) Math.floor(Math.random()*(floorSize));
+                while (this.rooms[x][y].getItemsCount() >= maxItemsPerRoom){
+                    x = (int) Math.floor(Math.random()*(floorSize));
+                    y = (int) Math.floor(Math.random()*(floorSize));
+                }
+                int index = (int)  Math.floor(Math.random()*(items.size()));
+                this.rooms[x][y].addItem(items.get(index));
+                items.remove(index);
+            }
+
+        }
+    }
+
 }

@@ -106,5 +106,8 @@ public class Room
         }
         return returnString + getExitString();
     }
+    public int getItemsCount(){
+        return items.size();
+    }
 
 }
