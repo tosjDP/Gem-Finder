@@ -12,6 +12,7 @@ public class Floor {
     private int maxItemsPerRoom;
     private Room[][] rooms;
     private ArrayList<Item> items;
+    private boolean nextFloor = false;
 
     public Room[][] getRooms() {
         return rooms;
@@ -28,6 +29,14 @@ public class Floor {
         this.assignItemToRoom();
     }
 
+    public boolean isNextFloor() {
+        return nextFloor;
+    }
+
+    public void setNextFloor(boolean nextFloor) {
+        this.nextFloor = nextFloor;
+    }
+
     private void generateRooms(){
         for (int i = 0; i < floorSize; i++) {
             for (int j = 0; j < floorSize; j++) {
@@ -40,7 +49,7 @@ public class Floor {
         }
 
         this.rooms[0][0] = new Room("You wake up in a dark room, and can't remember anything", RoomType.START,0,0,this);
-        this.rooms[floorSize-1][floorSize-1] = new Room("", RoomType.FINISH,floorSize-1,floorSize-1,this);
+        this.rooms[floorSize-1][floorSize-1] = new Room("finish", RoomType.FINISH,floorSize-1,floorSize-1,this);
 
         for (int i = 0; i < floorSize; i++) {
             for (int j = 0; j < floorSize; j++) {

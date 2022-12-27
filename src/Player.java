@@ -1,3 +1,5 @@
+import enums.RoomType;
+
 import java.util.ArrayList;
 
 public class Player {
@@ -8,6 +10,7 @@ public class Player {
     private Room currentRoom;
     private Room previousRoom;
     private ArrayList<Item> bag = new ArrayList<>();
+    private boolean canGoNextFloor = false;
 
     public Player(String name) {
         this.name = name;
@@ -31,9 +34,21 @@ public class Player {
         return currentRoom;
     }
 
+    public boolean isCanGoNextFloor() {
+        return canGoNextFloor;
+    }
+
+    public void setCanGoNextFloor(boolean canGoNextFloor) {
+        this.canGoNextFloor = canGoNextFloor;
+    }
+
     public void setCurrentRoom(Room currentRoom) {
         this.previousRoom = this.currentRoom;
         this.currentRoom = currentRoom;
+        Item gem = new Item("indigo gem","a shinmy blueis gem wow",0.2);
+        if (this.currentRoom.type.equals(RoomType.FINISH)&&this.bag.contains(gem)){
+            this.canGoNextFloor=true;
+        }
     }
     public void goBack(){
         this.currentRoom = this.previousRoom;
