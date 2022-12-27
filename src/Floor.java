@@ -1,7 +1,7 @@
-import enums.ItemType;
 import enums.RoomType;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
@@ -9,19 +9,23 @@ public class Floor {
     private int currentFloor;
     private int floorSize;
     private int itemsPerFloor;
-    private Room[][] rooms = new Room[floorSize][floorSize];
-    private Map<ItemType, String[]> items;
+    private int maxItemsPerRoom;
+    private Room[][] rooms;
+    private ArrayList<Item> items;
 
     public Room[][] getRooms() {
         return rooms;
     }
 
-    public Floor(int currentFloor, int itemsPerFloor, int floorSize,  Map<ItemType, String[]>items) {
+    public Floor(int currentFloor, int itemsPerFloor, int floorSize,int maxItemsPerRoom, ArrayList<Item>items) {
         this.currentFloor = currentFloor;
         this.itemsPerFloor=itemsPerFloor;
         this.floorSize=floorSize;
         this.items=items;
+        this.maxItemsPerRoom=maxItemsPerRoom;
+        this.rooms=new Room[floorSize][floorSize];
         this.generateRooms();
+        this.assignItemToRoom();
     }
 
     private void generateRooms(){
@@ -88,12 +92,18 @@ public class Floor {
     }
     private void assignItemToRoom(){
         for (int i = 0; i < itemsPerFloor; i++) {
-            int x = (int) Math.floor(Math.random()*(floorSize));
-            int y = (int) Math.floor(Math.random()*(floorSize));
-            String itemName = ItemType.values()[new Random().nextInt(ItemType.values().length)].name();
-            String description = items.get(itemName)[ (int)Math.floor(Math.random()*3)];
-            Item newitem = new Item(itemName,description, Math.floor(Math.random()*5));
-            this.rooms[x][y].addItem(newitem);
+            while (items.size() > 0){
+                int x = (int) Math.floor(Math.random()*(floorSize));
+                int y = (int) Math.floor(Math.random()*(floorSize));
+                while (this.rooms[x][y].getItemsCount() >= maxItemsPerRoom){
+                    x = (int) Math.floor(Math.random()*(floorSize));
+                    y = (int) Math.floor(Math.random()*(floorSize));
+                }
+                int index = (int)  Math.floor(Math.random()*(items.size()));
+                this.rooms[x][y].addItem(items.get(index));
+                items.remove(index);
+            }
+
         }
     }
 

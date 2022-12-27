@@ -1,5 +1,4 @@
-import enums.ItemType;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,10 +24,9 @@ public class Game
     private Parser parser;
     private Player player;
     private Floor floor;
-    public static Map<ItemType, String[]> items=new HashMap<>();
+    public static ArrayList<Item> items=new ArrayList<>();
 
 
-        
     /**++
      * Create the game and initialise its internal map.
      */
@@ -36,60 +34,11 @@ public class Game
     {
         parser = new Parser();
         player = new Player("Jos");
-        items.put(ItemType.FOOD,new String[]{"sfesfe","wedfqwdqd","ddawdawd"});
-        items.put(ItemType.GEM,new String[]{"ddaw","wedfqwdqd","ddawdawd"});
-        items.put(ItemType.POTION,new String[]{"ddaw","wedfqwdqd","ddawdawd"});
-        items.put(ItemType.HAT,new String[]{"ddaw","wedfqwdqd","ddawdawd"});
-        items.put(ItemType.TORCH,new String[]{"ddaw","wedfqwdqd","ddawdawd"});
-        items.put(ItemType.BONES,new String[]{"ddaw","wedfqwdqd","ddawdawd"});
-        items.put(ItemType.GOLD,new String[]{"ddaw","wedfqwdqd","ddawdawd"});
-
-        floor = new Floor(1,6,5,items);
+        initializeData();
+        floor = new Floor(1,3,2,2,items);
         player.setCurrentRoom(floor.getRooms()[0][0]);
 
-
-
     }
-
-    /**
-     * Create all the rooms and link their exits together.
-     */
-//    private void createRooms()
-//    {
-//        Room outside, theater, pub, lab, office, cellar;
-//        Item ashtray, promoboard;
-//
-//        // create the rooms
-//        outside = new Room("outside the main entrance of the university");
-//        promoboard = new Item("promoboard", "university promoboard",  3.2);
-//        ashtray = new Item("ashtray", "big yellow ashtray", 4.6);
-//        outside.addItem(promoboard);
-//        promoboard.setMoveable(false);
-//        outside.addItem(ashtray);
-//        theater = new Room("in a lecture theater");
-//        pub = new Room("in the campus pub");
-//        lab = new Room("in a computing lab");
-//        office = new Room("in the computing admin office");
-//        cellar = new Room("the cellar with stock for the pub");
-//
-//        // initialise room exits
-//        outside.setExit("east", theater);
-//        outside.setExit("south", lab);
-//        outside.setExit("west", pub);
-//        theater.setExit("west", outside);
-//        pub.setExit("east", outside);
-//        pub.setExit("down", cellar);
-//        cellar.setExit("up", pub);
-//        lab.setExit("north", outside);
-//        lab.setExit("east", office);
-//        office.setExit("west", lab);
-//
-//        cellar.addItem(new Item("rum", "a barrel of rum", 10.7));
-//        cellar.addItem(new Item("water", "a crate bottles of water", 12.2));
-//
-//        player.setCurrentRoom(outside);  // start game outside
-//    }
-
     /**
      *  Main play routine.  Loops until end of play.
      */
@@ -261,5 +210,15 @@ public class Game
     public static void main(String[] args) {
         Game game = new Game();
         game.play();
+    }
+    private void initializeData(){
+        items.add(new Item("cake","hmm jummy cake",8));
+        items.add(new Item("Fedora","cool blue color",3.7));
+        items.add(new Item("Key","Shiny new key, seems to open a door",5));
+//        items.add(new Item("Bones","Bones of a human that has tried to escape but failed",5.7));
+//        items.add(new Item("bucket","Bucket with some holes in it",3.4));
+//        items.add(new Item("Torch","giving a easing glow",1.9));
+//        items.add(new Item("Rock","Sturdy and heavy",9.3));
+
     }
 }
