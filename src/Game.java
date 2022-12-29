@@ -1,3 +1,5 @@
+import enums.RoomType;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +29,8 @@ public class Game
     private Floor currentFloor;
     public static ArrayList<Item> items=new ArrayList<>();
     private Item gem = new Item("Gem","yeey",0.1);
+    private boolean wantToQuit = false;
+    private boolean win = false;
 
     /**++
      * Create the game and initialise its internal map.
@@ -34,12 +38,12 @@ public class Game
     public Game() 
     {
         parser = new Parser();
-        player = new Player("Jos",gem);
+        player = new Player("Jos",1,gem,5);
         initializeData();
         floors.add(new Floor(1,10,3,2,items,gem));
-        floors.add(new Floor(2,10,4,2,items,gem));
-        floors.add(new Floor(3,10,5,2,items,gem));
-        floors.add(new Floor(4,10,6,2,items,gem));
+//        floors.add(new Floor(2,10,3,2,items,gem));
+//        floors.add(new Floor(3,10,5,2,items,gem));
+//        floors.add(new Floor(4,10,6,2,items,gem));
         //floors.add(new Floor(5,10,1,2,items));
         currentFloor = floors.get(0);
         player.setCurrentRoom(currentFloor.getRooms()[0][0]);
@@ -60,6 +64,15 @@ public class Game
             Command command = parser.getCommand();
             finished = processCommand(command);
         }
+
+        if(win){
+            //TODO add winning text
+            System.out.println("win");
+        }
+        else {
+            //TODO add losing text
+            System.out.println("lose");
+        }
         System.out.println("Thank you for playing.  Good bye.");
     }
 
@@ -77,6 +90,8 @@ public class Game
     }
 
     private void printLocationInfo() {
+        System.out.println(player.getCurrentRoom().type);
+        System.out.println("Player hp: " + player.getHp());
         System.out.println("currentfloor: " + floors.indexOf(currentFloor));
         System.out.println(player.getName() + " is " + player.getCurrentRoom().getLongDescription());
         System.out.println(player.getBagDescription());
@@ -90,7 +105,6 @@ public class Game
      */
     private boolean processCommand(Command command) 
     {
-        boolean wantToQuit = false;
 
         if(command.isUnknown()) {
             System.out.println("I don't know what you mean...");
@@ -134,7 +148,10 @@ public class Game
         int result = player.take(command.getSecondWord().toLowerCase());
         if (result==Player.ITEM_GONE) {
             printLocationInfo();
-        } else {
+        }
+        else if(result==player.ITEM_TO_HEAVY)
+            System.out.println("Item " + command.getSecondWord() + " is to heavy to add to the bag, you can drop something else to pick it up");
+        else {
             if (result==Player.ITEM_NOTMOVEABLE) {
                 System.out.println("Item " + command.getSecondWord() + " is not moveable");
             } else {
@@ -193,14 +210,21 @@ public class Game
         }
         else {
             player.setCurrentRoom(nextRoom);
+
+            if(player.getCurrentRoom().type.equals(RoomType.TRAP)||player.getCurrentRoom().type.equals(RoomType.PIT)||player.getCurrentRoom().type.equals(RoomType.FLOODED)){
+                int result = player.takeDamage();
+                if(result == player.DEAD);
+                    wantToQuit = true;
+            }
             if (player.isCanGoNextFloor()){
                 int index = floors.indexOf(currentFloor);
                 if (index == floors.size()-1){
-                    //TODO add win statement
-                }
+                    win = true;
+                    wantToQuit = true;
+                    return;
+                 }
                 else{
                     currentFloor = floors.get(index+1);
-
                     player.setCurrentRoom(currentFloor.getRooms()[0][0]);
                     player.setCanGoNextFloor(false);
                 }
