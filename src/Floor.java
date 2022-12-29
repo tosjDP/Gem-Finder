@@ -13,6 +13,7 @@ public class Floor {
     private Room[][] rooms;
     private ArrayList<Item> items;
     private boolean nextFloor = false;
+    private Item gem = new Item("Gem","yeey",0.1);
 
     public Room[][] getRooms() {
         return rooms;
@@ -27,6 +28,10 @@ public class Floor {
         this.rooms=new Room[floorSize][floorSize];
         this.generateRooms();
         this.assignItemToRoom();
+    }
+
+    public int getCurrentFloor() {
+        return currentFloor;
     }
 
     public boolean isNextFloor() {
@@ -114,6 +119,9 @@ public class Floor {
             }
 
         }
+        int x = (int) Math.floor(Math.random()*(floorSize));
+        int y = (int) Math.floor(Math.random()*(floorSize));
+        this.rooms[x][y].addItem(gem);
     }
 
 }

@@ -36,12 +36,13 @@ public class Game
         parser = new Parser();
         player = new Player("Jos");
         initializeData();
-        floors.add(new Floor(1,10,5,1,items));
-        floors.add(new Floor(1,10,5,1,items));
-        floors.add(new Floor(1,10,5,1,items));
-        floors.add(new Floor(1,10,5,1,items));
+        floors.add(new Floor(1,10,2,1,items));
+        floors.add(new Floor(2,10,2,1,items));
+        floors.add(new Floor(3,10,2,1,items));
+        floors.add(new Floor(4,10,2,1,items));
+        floors.add(new Floor(5,10,1,1,items));
         currentFloor = floors.get(0);
-        player.setCurrentRoom(currentFloor.getRooms()[3][3]);
+        player.setCurrentRoom(currentFloor.getRooms()[0][0]);
 
     }
     /**
@@ -192,18 +193,19 @@ public class Game
         }
         else {
             player.setCurrentRoom(nextRoom);
-            printLocationInfo();
             if (player.isCanGoNextFloor()){
                 int index = floors.indexOf(currentFloor);
                 if (index == floors.size()-1){
-                    //add win statement
+                    //TODO add win statement
                 }
                 else{
-                    currentFloor = floors.get(index++);
+                    currentFloor = floors.get(index+1);
+
                     player.setCurrentRoom(currentFloor.getRooms()[0][0]);
                     player.setCanGoNextFloor(false);
                 }
             }
+            printLocationInfo();
         }
     }
 
