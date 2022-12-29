@@ -11,7 +11,7 @@ public class Item {
     }
 
     public String getName() {
-        return name;
+        return name.toLowerCase();
     }
 
     public void setName(String name) {

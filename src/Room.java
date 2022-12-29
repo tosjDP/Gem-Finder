@@ -51,6 +51,9 @@ public class Room
         this.x=x;
         this.floor=floor;
     }
+    public int getFloor(){
+        return this.floor.getCurrentFloor();
+    }
 
     public void addItem(Item item) {
         if (item!=null) items.add(item);

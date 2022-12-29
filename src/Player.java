@@ -1,6 +1,8 @@
 import enums.RoomType;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class Player {
     public static final int ITEM_GONE = 0;
@@ -11,9 +13,11 @@ public class Player {
     private Room previousRoom;
     private ArrayList<Item> bag = new ArrayList<>();
     private boolean canGoNextFloor = false;
+    private Item gem;
 
-    public Player(String name) {
+    public Player(String name,Item gem) {
         this.name = name;
+        this.gem=gem;
     }
 
     public int take(String name) {
@@ -43,10 +47,11 @@ public class Player {
     }
 
     public void setCurrentRoom(Room currentRoom) {
+        int gemCount = Collections.frequency(bag,gem);
         this.previousRoom = this.currentRoom;
         this.currentRoom = currentRoom;
-        Item gem = new Item("indigo gem","a shinmy blueis gem wow",0.2);
-        if (this.currentRoom.type.equals(RoomType.FINISH)&&this.bag.contains(gem)){
+        if (this.currentRoom.type.equals(RoomType.FINISH)&&currentRoom.getFloor()==gemCount)
+         {
             this.canGoNextFloor=true;
         }
     }

@@ -26,7 +26,7 @@ public class Game
     private ArrayList<Floor> floors =new ArrayList<>();
     private Floor currentFloor;
     public static ArrayList<Item> items=new ArrayList<>();
-
+    private Item gem = new Item("Gem","yeey",0.1);
 
     /**++
      * Create the game and initialise its internal map.
@@ -34,14 +34,15 @@ public class Game
     public Game() 
     {
         parser = new Parser();
-        player = new Player("Jos");
+        player = new Player("Jos",gem);
         initializeData();
-        floors.add(new Floor(1,10,5,1,items));
-        floors.add(new Floor(1,10,5,1,items));
-        floors.add(new Floor(1,10,5,1,items));
-        floors.add(new Floor(1,10,5,1,items));
+        floors.add(new Floor(1,10,3,2,items,gem));
+        floors.add(new Floor(2,10,4,2,items,gem));
+        floors.add(new Floor(3,10,5,2,items,gem));
+        floors.add(new Floor(4,10,6,2,items,gem));
+        //floors.add(new Floor(5,10,1,2,items));
         currentFloor = floors.get(0);
-        player.setCurrentRoom(currentFloor.getRooms()[3][3]);
+        player.setCurrentRoom(currentFloor.getRooms()[0][0]);
 
     }
     /**
@@ -130,7 +131,7 @@ public class Game
             return;
         }
 
-        int result = player.take(command.getSecondWord());
+        int result = player.take(command.getSecondWord().toLowerCase());
         if (result==Player.ITEM_GONE) {
             printLocationInfo();
         } else {
@@ -192,18 +193,19 @@ public class Game
         }
         else {
             player.setCurrentRoom(nextRoom);
-            printLocationInfo();
             if (player.isCanGoNextFloor()){
                 int index = floors.indexOf(currentFloor);
                 if (index == floors.size()-1){
-                    //add win statement
+                    //TODO add win statement
                 }
                 else{
-                    currentFloor = floors.get(index++);
+                    currentFloor = floors.get(index+1);
+
                     player.setCurrentRoom(currentFloor.getRooms()[0][0]);
                     player.setCanGoNextFloor(false);
                 }
             }
+            printLocationInfo();
         }
     }
 
