@@ -15,8 +15,9 @@ public class Player {
     private boolean canGoNextFloor = false;
     private Item gem;
 
-    public Player(String name) {
+    public Player(String name,Item gem) {
         this.name = name;
+        this.gem=gem;
     }
 
     public int take(String name) {

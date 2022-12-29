@@ -13,19 +13,20 @@ public class Floor {
     private Room[][] rooms;
     private ArrayList<Item> items;
     private boolean nextFloor = false;
-    private Item gem = new Item("Gem","yeey",0.1);
+    private Item gem;
 
     public Room[][] getRooms() {
         return rooms;
     }
 
-    public Floor(int currentFloor, int itemsPerFloor, int floorSize,int maxItemsPerRoom, ArrayList<Item>items) {
+    public Floor(int currentFloor, int itemsPerFloor, int floorSize,int maxItemsPerRoom, ArrayList<Item>items ,Item gem) {
         this.currentFloor = currentFloor;
         this.itemsPerFloor=itemsPerFloor;
         this.floorSize=floorSize;
-        this.items=items;
+        this.items = new ArrayList<>(items);
         this.maxItemsPerRoom=maxItemsPerRoom;
         this.rooms=new Room[floorSize][floorSize];
+        this.gem=gem;
         this.generateRooms();
         this.assignItemToRoom();
     }
@@ -106,7 +107,7 @@ public class Floor {
     }
     private void assignItemToRoom(){
         for (int i = 0; i < itemsPerFloor; i++) {
-            while (items.size() > 0){
+
                 int x = (int) Math.floor(Math.random()*(floorSize));
                 int y = (int) Math.floor(Math.random()*(floorSize));
                 while (this.rooms[x][y].getItemsCount() >= maxItemsPerRoom){
@@ -116,7 +117,6 @@ public class Floor {
                 int index = (int)  Math.floor(Math.random()*(items.size()));
                 this.rooms[x][y].addItem(items.get(index));
                 items.remove(index);
-            }
 
         }
         int x = (int) Math.floor(Math.random()*(floorSize));
