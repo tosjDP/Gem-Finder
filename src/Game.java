@@ -40,7 +40,7 @@ public class Game
         parser = new Parser();
         player = new Player("Jos",1,gem,5);
         initializeData();
-        floors.add(new Floor(1,10,3,2,items,gem));
+        floors.add(new Floor(1,10,10,2,items,gem));
 //        floors.add(new Floor(2,10,3,2,items,gem));
 //        floors.add(new Floor(3,10,5,2,items,gem));
 //        floors.add(new Floor(4,10,6,2,items,gem));
@@ -215,6 +215,10 @@ public class Game
                 int result = player.takeDamage();
                 if(result == player.DEAD);
                     wantToQuit = true;
+            } else if (player.getCurrentRoom().type.equals(RoomType.TELEPORT)) {
+                int x = (int) Math.floor(Math.random()*(currentFloor.getFloorSize()));
+                int y = (int) Math.floor(Math.random()*(currentFloor.getFloorSize()));
+                player.setCurrentRoom(this.currentFloor.getRooms()[x][y]);
             }
             if (player.isCanGoNextFloor()){
                 int index = floors.indexOf(currentFloor);
