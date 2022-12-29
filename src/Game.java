@@ -131,7 +131,7 @@ public class Game
             return;
         }
 
-        int result = player.take(command.getSecondWord());
+        int result = player.take(command.getSecondWord().toLowerCase());
         if (result==Player.ITEM_GONE) {
             printLocationInfo();
         } else {
