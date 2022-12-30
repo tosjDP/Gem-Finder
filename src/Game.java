@@ -71,7 +71,7 @@ public class Game {
             //TODO add losing text
             System.out.println("lose");
         }
-        System.out.println("Thank you for playing.  Good bye.");
+        System.out.println("Thank you for playing my game! Good bye.");
     }
 
     /**
