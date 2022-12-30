@@ -9,6 +9,7 @@ public class Player {
     public static final int ITEM_NOTPRESENT = 1;
     public static final int ITEM_NOTMOVEABLE = 2;
     public static final int ITEM_TO_HEAVY = 3;
+    public static final int ITEM_DROPPED = 4;
     public static final int DEAD = 0;
     public static final int ALIVE = 1;
     private String name;
@@ -44,6 +45,17 @@ public class Player {
         }
         if (item==null) return ITEM_NOTPRESENT;
         return ITEM_NOTMOVEABLE;
+    }
+
+    public int drop(String name){
+        for (Item item : bag){
+            if (item.getName().equals(name)){
+                currentRoom.addItem(item);
+                bag.remove(item);
+                return ITEM_DROPPED;
+            }
+        }
+        return ITEM_NOTPRESENT;
     }
     public int takeDamage(){
         if(hp >0) {
@@ -94,4 +106,5 @@ public class Player {
         }
         return returnString;
     }
+
 }

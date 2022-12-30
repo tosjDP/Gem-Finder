@@ -2,6 +2,7 @@ import enums.RoomType;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Random;
 
@@ -35,6 +36,10 @@ public class Floor {
         return currentFloor;
     }
 
+    public int getFloorSize() {
+        return floorSize;
+    }
+
     public boolean isNextFloor() {
         return nextFloor;
     }
@@ -44,15 +49,25 @@ public class Floor {
     }
 
     private void generateRooms(){
+        boolean hasTeleport = false;
         for (int i = 0; i < floorSize; i++) {
             for (int j = 0; j < floorSize; j++) {
                 RoomType type = RoomType.values()[new Random().nextInt(RoomType.values().length)];
-                if(type == RoomType.FINISH || type == RoomType.START)
+                if(type.equals(RoomType.FINISH) || type.equals(RoomType.START))
                     type = RoomType.values()[new Random().nextInt(RoomType.values().length)];
 
+                if(hasTeleport == true) {
+                    while (type.equals(RoomType.TELEPORT)) {
+                        type = RoomType.values()[new Random().nextInt(RoomType.values().length)];
+                    }
+                    hasTeleport = true;
+                }
+                System.out.println(type);
                 this.rooms[i][j] = new Room("x: "+i+ " y: "+j,type,i,j,this);
             }
         }
+
+
 
         this.rooms[0][0] = new Room("You wake up in a dark room, and can't remember anything", RoomType.START,0,0,this);
         this.rooms[floorSize-1][floorSize-1] = new Room("finish", RoomType.FINISH,floorSize-1,floorSize-1,this);
@@ -107,7 +122,6 @@ public class Floor {
     }
     private void assignItemToRoom(){
         for (int i = 0; i < itemsPerFloor; i++) {
-
                 int x = (int) Math.floor(Math.random()*(floorSize));
                 int y = (int) Math.floor(Math.random()*(floorSize));
                 while (this.rooms[x][y].getItemsCount() >= maxItemsPerRoom){
