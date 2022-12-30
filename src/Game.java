@@ -37,7 +37,7 @@ public class Game {
      */
     public Game() {
         parser = new Parser();
-        player = new Player("Jos", 1, gem, 5);
+        player = new Player("Spelunker", 1, gem, 20);
         initializeData();
         floors.add(new Floor(1, 10, 10, 2, items, gem));
 //        floors.add(new Floor(2,10,3,2,items,gem));
