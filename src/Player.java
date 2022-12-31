@@ -3,6 +3,7 @@ import enums.RoomType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class Player {
     public static final int ITEM_GONE = 0;
@@ -20,12 +21,17 @@ public class Player {
     private Item gem;
     private double maxWeight =20;
     private int hp;
+    private HashMap<RoomType,String> trapDescription;
 
     public Player(String name,int hp,Item gem,double maxWeight) {
         this.name = name;
         this.gem=gem;
         this.maxWeight=maxWeight;
         this.hp = hp;
+        this.trapDescription.put(RoomType.PIT,"you trip over a small rock and fall into the infinte void");
+        this.trapDescription.put(RoomType.PIT,"");
+        this.trapDescription.put(RoomType.PIT,"");
+        //TODO add description
     }
 
     public int getHp() {
@@ -58,8 +64,10 @@ public class Player {
         return ITEM_NOTPRESENT;
     }
     public int takeDamage(){
+        String description = trapDescription.get(currentRoom.getType());
         if(hp >0) {
             hp--;
+            System.out.println(description);
             return ALIVE;
         }
         return DEAD;
@@ -86,7 +94,7 @@ public class Player {
         this.previousRoom = this.currentRoom;
         this.currentRoom = currentRoom;
 
-        if (this.currentRoom.type.equals(RoomType.FINISH)&&currentRoom.getFloor()==gemCount) {
+        if (this.currentRoom.getType().equals(RoomType.FINISH)&&currentRoom.getFloor()==gemCount) {
             this.canGoNextFloor=true;
         }
     }
