@@ -1,10 +1,7 @@
 import enums.RoomType;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class Floor {
     private int currentFloor;
@@ -15,12 +12,14 @@ public class Floor {
     private ArrayList<Item> items;
     private boolean nextFloor = false;
     private Item gem;
+    private int maxDangerRooms;
+    private HashMap<RoomType,String> roomDescription = new HashMap<>();
 
     public Room[][] getRooms() {
         return rooms;
     }
 
-    public Floor(int currentFloor, int itemsPerFloor, int floorSize,int maxItemsPerRoom, ArrayList<Item>items ,Item gem) {
+    public Floor(int currentFloor, int itemsPerFloor, int floorSize,int maxItemsPerRoom, ArrayList<Item>items ,Item gem,int maxDangerRooms) {
         this.currentFloor = currentFloor;
         this.itemsPerFloor=itemsPerFloor;
         this.floorSize=floorSize;
@@ -28,8 +27,14 @@ public class Floor {
         this.maxItemsPerRoom=maxItemsPerRoom;
         this.rooms=new Room[floorSize][floorSize];
         this.gem=gem;
+        this.maxDangerRooms=maxDangerRooms;
+        this.roomDescription.put(RoomType.PIT,"A deep pit");
+        this.roomDescription.put(RoomType.FLOODED,"A deep pit");
+        this.roomDescription.put(RoomType.TRAP,"A deep pit");
+        //TODO room type beschtrijve
         this.generateRooms();
         this.assignItemToRoom();
+
     }
 
     public int getCurrentFloor() {
@@ -50,27 +55,36 @@ public class Floor {
 
     private void generateRooms(){
         boolean hasTeleport = false;
+        int dangerRoomcount = 0;
         for (int i = 0; i < floorSize; i++) {
             for (int j = 0; j < floorSize; j++) {
                 RoomType type = RoomType.values()[new Random().nextInt(RoomType.values().length)];
-                if(type.equals(RoomType.FINISH) || type.equals(RoomType.START))
+                while(type.equals(RoomType.FINISH) || type.equals(RoomType.START)) {
                     type = RoomType.values()[new Random().nextInt(RoomType.values().length)];
-
-                if(hasTeleport == true) {
+                }
+                if (dangerRoomcount >= maxDangerRooms)
+                while(type.equals(RoomType.FLOODED)||type.equals(RoomType.PIT)||type.equals(RoomType.TRAP)) {
+                    type = RoomType.values()[new Random().nextInt(RoomType.values().length)];
+                }
+                if(hasTeleport) {
                     while (type.equals(RoomType.TELEPORT)) {
                         type = RoomType.values()[new Random().nextInt(RoomType.values().length)];
                     }
-                    hasTeleport = true;
                 }
+                if (type.equals(RoomType.TELEPORT))
+                    hasTeleport= true;
+
+                if (type.equals(RoomType.FLOODED)||type.equals(RoomType.PIT)||type.equals(RoomType.TRAP))
+                    dangerRoomcount++;
                 System.out.println(type);
-                this.rooms[i][j] = new Room("x: "+i+ " y: "+j,type,i,j,this);
+                this.rooms[i][j] = new Room("x: "+i+ " y: "+j +" "+roomDescription.get(type),type,i,j,this);
             }
         }
 
 
 
         this.rooms[0][0] = new Room("You wake up in a dark room, and can't remember anything", RoomType.START,0,0,this);
-        this.rooms[floorSize-1][floorSize-1] = new Room("finish", RoomType.FINISH,floorSize-1,floorSize-1,this);
+        this.rooms[floorSize-1][floorSize-1] = new Room("a large emtpy room with a big door, looks like the gem fits te door", RoomType.FINISH,floorSize-1,floorSize-1,this);
 
         for (int i = 0; i < floorSize; i++) {
             for (int j = 0; j < floorSize; j++) {
@@ -128,10 +142,11 @@ public class Floor {
                     x = (int) Math.floor(Math.random()*(floorSize));
                     y = (int) Math.floor(Math.random()*(floorSize));
                 }
-                int index = (int)  Math.floor(Math.random()*(items.size()));
-                this.rooms[x][y].addItem(items.get(index));
-                items.remove(index);
-
+                if (!this.rooms[x][y].getType().equals(RoomType.FLOODED)||!this.rooms[x][y].getType().equals(RoomType.TRAP)||!this.rooms[x][y].getType().equals(RoomType.PIT)) {
+                    int index = (int)  Math.floor(Math.random()*(items.size()));
+                    this.rooms[x][y].addItem(items.get(index));
+                    items.remove(index);
+                }
         }
         int x = (int) Math.floor(Math.random()*(floorSize));
         int y = (int) Math.floor(Math.random()*(floorSize));

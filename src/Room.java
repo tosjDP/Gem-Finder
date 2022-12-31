@@ -23,7 +23,7 @@ public class Room
     private String description;
     private HashMap<String, Room> exits;
     private ArrayList<Item> items = new ArrayList<>();
-    RoomType type;
+    private RoomType type;
     private int x;
     private int y;
     private Floor floor;
@@ -51,6 +51,11 @@ public class Room
         this.x=x;
         this.floor=floor;
     }
+
+    public RoomType getType() {
+        return type;
+    }
+
     public int getFloor(){
         return this.floor.getCurrentFloor();
     }

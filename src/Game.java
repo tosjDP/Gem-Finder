@@ -27,7 +27,7 @@ public class Game {
     private ArrayList<Floor> floors = new ArrayList<>();
     private Floor currentFloor;
     public static ArrayList<Item> items = new ArrayList<>();
-    private Item gem = new Item("Gem", "yeey", 0.1);
+    private Item gem = new Item("Gem", "a shiny boy", 0.1);
     private boolean wantToQuit = false;
     private boolean win = false;
 
@@ -37,13 +37,11 @@ public class Game {
      */
     public Game() {
         parser = new Parser();
-        player = new Player("Spelunker", 1, gem, 20);
+        player = new Player("Spelunker", 3, gem, 20);
         initializeData();
-        floors.add(new Floor(1, 10, 10, 2, items, gem));
-//        floors.add(new Floor(2,10,3,2,items,gem));
-//        floors.add(new Floor(3,10,5,2,items,gem));
-//        floors.add(new Floor(4,10,6,2,items,gem));
-        //floors.add(new Floor(5,10,1,2,items));
+        floors.add(new Floor(1, 9, 3, 1, items, gem,2));
+        floors.add(new Floor(2,10,4,2,items,gem,2));
+        floors.add(new Floor(3,10,5,2,items,gem,2));
         currentFloor = floors.get(0);
         player.setCurrentRoom(currentFloor.getRooms()[0][0]);
 
@@ -87,7 +85,7 @@ public class Game {
     }
 
     private void printLocationInfo() {
-        System.out.println(player.getCurrentRoom().type);
+        System.out.println(player.getCurrentRoom().getType());
         System.out.println("Player hp: " + player.getHp());
         System.out.println("currentfloor: " + floors.indexOf(currentFloor));
         System.out.println(player.getName() + " is " + player.getCurrentRoom().getLongDescription());
@@ -221,11 +219,11 @@ public class Game {
             } else {
                 player.setCurrentRoom(nextRoom);
 
-                if (player.getCurrentRoom().type.equals(RoomType.TRAP) || player.getCurrentRoom().type.equals(RoomType.PIT) || player.getCurrentRoom().type.equals(RoomType.FLOODED)) {
+                if (player.getCurrentRoom().getType().equals(RoomType.TRAP) || player.getCurrentRoom().getType().equals(RoomType.PIT) || player.getCurrentRoom().getType().equals(RoomType.FLOODED)) {
                     int result = player.takeDamage();
-                    if (result == player.DEAD) ;
+                    if (result == player.DEAD)
                     wantToQuit = true;
-                } else if (player.getCurrentRoom().type.equals(RoomType.TELEPORT)) {
+                } else if (player.getCurrentRoom().getType().equals(RoomType.TELEPORT)) {
                     int x = (int) Math.floor(Math.random() * (currentFloor.getFloorSize()));
                     int y = (int) Math.floor(Math.random() * (currentFloor.getFloorSize()));
                     player.setCurrentRoom(this.currentFloor.getRooms()[x][y]);
