@@ -29,8 +29,8 @@ public class Player {
         this.maxWeight=maxWeight;
         this.hp = hp;
         this.trapDescription.put(RoomType.PIT,"you trip over a small rock and fall into the infinte void");
-        this.trapDescription.put(RoomType.PIT,"");
-        this.trapDescription.put(RoomType.PIT,"");
+        this.trapDescription.put(RoomType.FLOODED,"When you enter the room the gate closed behind you and the room started flooding");
+        this.trapDescription.put(RoomType.TRAP,"you step on a hidden plate,oops");
         //TODO add description
     }
 
@@ -38,6 +38,10 @@ public class Player {
         return hp;
     }
 
+    /**
+     *de take commande
+     * dit chech of de player de item mag opnemen en het niet de buiten de regels valt
+     */
     public int take(String name) {
         double currentweight=0;
         for (Item i : bag)
@@ -52,7 +56,9 @@ public class Player {
         if (item==null) return ITEM_NOTPRESENT;
         return ITEM_NOTMOVEABLE;
     }
-
+    /**
+     *de drop functie.
+     */
     public int drop(String name){
         for (Item item : bag){
             if (item.getName().equals(name)){
@@ -94,6 +100,9 @@ public class Player {
         this.previousRoom = this.currentRoom;
         this.currentRoom = currentRoom;
 
+        /**
+         *checkt of de player de gem heeft die nodig is voor naar de volgende floor te gaan.
+         */
         if (this.currentRoom.getType().equals(RoomType.FINISH)&&currentRoom.getFloor()==gemCount) {
             this.canGoNextFloor=true;
         }

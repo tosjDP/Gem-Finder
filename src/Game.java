@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *  This class is the main class of the "World of Zuul" application. 
- *  "World of Zuul" is a very simple, text based adventure game.  Users 
+ *  This class is the main class of my game.
+ *  "my game is a very simple, text based adventure game.  Users
  *  can walk around some scenery. That's all. It should really be extended 
  *  to make it more interesting!
  * 
@@ -32,8 +32,10 @@ public class Game {
     private boolean win = false;
 
     /**
-     * ++
-     * Create the game and initialise its internal map.
+     1. roept de parser op
+     2. maakt een player aan
+     3. maakt mijn vereschillnde floors aan
+     4. rope tde array van mijn kamer op
      */
     public Game() {
         parser = new Parser();
@@ -48,13 +50,11 @@ public class Game {
     }
 
     /**
-     * Main play routine.  Loops until end of play.
+     begint de main loop dit gaat door tot de game stop
      */
     public void play() {
         printWelcome();
 
-        // Enter the main command loop.  Here we repeatedly read commands and
-        // execute them until the game is over.
 
         boolean finished = false;
         while (!finished) {
@@ -73,7 +73,7 @@ public class Game {
     }
 
     /**
-     * Print out the opening message for the player.
+     * de opening message voor de player.
      */
     private void printWelcome() {
         System.out.println();
@@ -83,7 +83,9 @@ public class Game {
         System.out.println();
         printLocationInfo();
     }
-
+    /**
+     * prints de loctie van de player en etc.
+     */
     private void printLocationInfo() {
         System.out.println(player.getCurrentRoom().getType());
         System.out.println("Player hp: " + player.getHp());
@@ -134,6 +136,10 @@ public class Game {
 
         return wantToQuit;
     }
+    /**
+     * het take commando
+     * gaat door elke loopwaar nodig is voor elk item
+     */
 
     private void take(Command command) {
         if (!command.hasSecondWord()) {
@@ -155,7 +161,9 @@ public class Game {
 
         }
     }
-
+    /**
+     * deze functie laat toe een item te droppe en check of dat mogelijk is
+     */
     private void drop(Command command) {
         if (!command.hasSecondWord()) {
             System.out.println("drop what?");
@@ -185,6 +193,9 @@ public class Game {
             System.out.println("His command words are:");
             System.out.println("   " + parser.showCommands());
         }
+    /**
+     * het look commando  roept de current room aan en geeft deze terug aan de player
+     */
 
         private void look () {
             System.out.println(player.getName() + " is " + player.getCurrentRoom().getLongDescription());
@@ -211,6 +222,9 @@ public class Game {
             // Try to leave current room.
             Room nextRoom = player.getCurrentRoom().getExit(direction);
 
+            /**
+             * de back functie.
+             */
             if (direction.equals("back")) {
                 player.goBack();
                 printLocationInfo();
@@ -223,11 +237,17 @@ public class Game {
                     int result = player.takeDamage();
                     if (result == player.DEAD)
                     wantToQuit = true;
+                    /**
+                     * de teleport functie , als de player in een teleport room komt zal hij naar een random kamer in de array worden "geteleport"
+                     */
                 } else if (player.getCurrentRoom().getType().equals(RoomType.TELEPORT)) {
                     int x = (int) Math.floor(Math.random() * (currentFloor.getFloorSize()));
                     int y = (int) Math.floor(Math.random() * (currentFloor.getFloorSize()));
                     player.setCurrentRoom(this.currentFloor.getRooms()[x][y]);
                 }
+                /**
+                 * deze stuurt de player naar de volgende floor
+                 */
                 if (player.isCanGoNextFloor()) {
                     int index = floors.indexOf(currentFloor);
                     if (index == floors.size() - 1) {
@@ -263,6 +283,9 @@ public class Game {
             Game game = new Game();
             game.play();
         }
+    /**
+     * in deze functie maak ik mijn items aan
+     */
         private void initializeData () {
             items.add(new Item("cake", "hmm jummy cake", 0.5));
             items.add(new Item("Fedora", "youre a real chad if you wear one of these", 0.2));

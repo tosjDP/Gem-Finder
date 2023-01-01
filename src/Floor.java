@@ -29,8 +29,8 @@ public class Floor {
         this.gem=gem;
         this.maxDangerRooms=maxDangerRooms;
         this.roomDescription.put(RoomType.PIT,"A deep pit");
-        this.roomDescription.put(RoomType.FLOODED,"A deep pit");
-        this.roomDescription.put(RoomType.TRAP,"A deep pit");
+        this.roomDescription.put(RoomType.FLOODED,"a flooded room");
+        this.roomDescription.put(RoomType.TRAP,"dont go in this one");
         //TODO room type beschtrijve
         this.generateRooms();
         this.assignItemToRoom();
@@ -53,6 +53,9 @@ public class Floor {
         this.nextFloor = nextFloor;
     }
 
+    /**
+     *deze functie genereet in een array al mijn RoomTypes op een random x en y.
+     */
     private void generateRooms(){
         boolean hasTeleport = false;
         int dangerRoomcount = 0;
@@ -82,10 +85,17 @@ public class Floor {
         }
 
 
+        /**
+         *zet de START en FINISH room van elke flor op een vaste plaats.
+         */
 
         this.rooms[0][0] = new Room("You wake up in a dark room, and can't remember anything", RoomType.START,0,0,this);
         this.rooms[floorSize-1][floorSize-1] = new Room("a large emtpy room with a big door, looks like the gem fits te door", RoomType.FINISH,floorSize-1,floorSize-1,this);
 
+
+        /**
+         *deze functie zorgt ervoor dat er randen zijn aan mijn array door de hoeken en de kanten van elke floor in te stellen .
+         */
         for (int i = 0; i < floorSize; i++) {
             for (int j = 0; j < floorSize; j++) {
                 Room room = this.rooms[i][j];
@@ -134,6 +144,9 @@ public class Floor {
             }
         }
     }
+    /**
+     deze functie zet items in al mijn room sen kiest deze ook random en checkt of het geen traprooms zijn waar geen items in kunnen.
+     */
     private void assignItemToRoom(){
         for (int i = 0; i < itemsPerFloor; i++) {
                 int x = (int) Math.floor(Math.random()*(floorSize));
