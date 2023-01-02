@@ -33,17 +33,15 @@ public class Game {
 
     /**
      1. roept de parser op
-     2. maakt een player aan
-     3. maakt mijn vereschillnde floors aan
-     4. rope tde array van mijn kamer op
+     2. maakt een player aan (name, hp, gem item, max weigth)
+     3. maakt mijn Verschillende floors aan (maar 1 atm door bu)
+     4. set the huidige floor en de starting room
      */
     public Game() {
         parser = new Parser();
-        player = new Player("Spelunker", 3, gem, 20);
+        player = new Player("Tosj", 5, gem, 20);
         initializeData();
-        floors.add(new Floor(1, 9, 3, 1, items, gem,2));
-        floors.add(new Floor(2,10,4,2,items,gem,2));
-        floors.add(new Floor(3,10,5,2,items,gem,2));
+        floors.add(new Floor(1, 15, 10, 1, items, gem,10));
         currentFloor = floors.get(0);
         player.setCurrentRoom(currentFloor.getRooms()[0][0]);
 
@@ -63,11 +61,9 @@ public class Game {
         }
 
         if (win) {
-            //TODO add winning text
-            System.out.println("win");
+            System.out.println("Congratulations on winning the game, if you want to increase (or decrease you weakling) you can edit the player and the floors.");
         } else {
-            //TODO add losing text
-            System.out.println("lose");
+            System.out.println("Sucks to be you, you lost the game as expected. Maybe try Tetris, better luck next time.go e");
         }
         System.out.println("Thank you for playing my game! Good bye.");
     }
@@ -84,13 +80,12 @@ public class Game {
         printLocationInfo();
     }
     /**
-     * prints de loctie van de player en etc.
+     * prints de loctie van de player info over de kamer en de bag
      */
     private void printLocationInfo() {
-        System.out.println(player.getCurrentRoom().getType());
         System.out.println("Player hp: " + player.getHp());
         System.out.println("currentfloor: " + floors.indexOf(currentFloor));
-        System.out.println(player.getName() + " is " + player.getCurrentRoom().getLongDescription());
+        System.out.println(player.getName() + ", " + player.getCurrentRoom().getLongDescription());
         System.out.println(player.getBagDescription());
         System.out.println();
     }
@@ -198,7 +193,7 @@ public class Game {
      */
 
         private void look () {
-            System.out.println(player.getName() + " is " + player.getCurrentRoom().getLongDescription());
+            System.out.println(player.getName() + ", " + player.getCurrentRoom().getLongDescription());
         }
 
         private void eat () {
@@ -237,10 +232,18 @@ public class Game {
                     int result = player.takeDamage();
                     if (result == player.DEAD)
                     wantToQuit = true;
+
                     /**
-                     * de teleport functie , als de player in een teleport room komt zal hij naar een random kamer in de array worden "geteleport"
+                     * de teleport functie , als de player in een teleport room komt zal hij naar een random kamer in de array worden verplaatst
                      */
                 } else if (player.getCurrentRoom().getType().equals(RoomType.TELEPORT)) {
+                    /**
+                     * Math.Random maakt randon double aan tussen o,1
+                     * De vermeningvuldiging met floorsize zorgt ervoor dat het een double getal wordt tussen 0 & floorsize wordt
+                     * Math.floor rond af deze af naar beneden
+                     * (int) maakt van de double een int
+                     * en deze int kan gebruik worden als coordinaat
+                     */
                     int x = (int) Math.floor(Math.random() * (currentFloor.getFloorSize()));
                     int y = (int) Math.floor(Math.random() * (currentFloor.getFloorSize()));
                     player.setCurrentRoom(this.currentFloor.getRooms()[x][y]);
@@ -258,6 +261,7 @@ public class Game {
                         currentFloor = floors.get(index + 1);
                         player.setCurrentRoom(currentFloor.getRooms()[0][0]);
                         player.setCanGoNextFloor(false);
+                        System.out.println("You fit the gem(s) into the door and it unlocks, allowing you to move to the next floor.");
                     }
                 }
                 printLocationInfo();

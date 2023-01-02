@@ -65,8 +65,8 @@ public class Room
     }
 
     public boolean hasItem(String name) {
-        for(Item i : items) {
-            if (i.getName().equals(name)) return true;
+        for(int i = 0;i < items.size();i++) {
+            if (items.get(i).getName().equals(name)) return true;
         }
         return false;
     }
@@ -108,7 +108,7 @@ public class Room
     }
 
     public String getLongDescription() {
-        String returnString = getDescription() + ". It contains:" + System.lineSeparator();
+        String returnString = getDescription() + System.lineSeparator()+ "It contains:" + System.lineSeparator();
         for(Item i : items) {
             returnString += "  " + i.getLongDescription() + System.lineSeparator();
         }
