@@ -21,27 +21,30 @@ public class Player {
     private Item gem;
     private double maxWeight =20;
     private int hp;
-    private HashMap<RoomType,String> trapDescription;
+    private HashMap<RoomType,String> trapDescription = new HashMap<>();
 
     public Player(String name,int hp,Item gem,double maxWeight) {
         this.name = name;
         this.gem=gem;
         this.maxWeight=maxWeight;
         this.hp = hp;
-        this.trapDescription.put(RoomType.PIT,"you trip over a small rock and fall into the infinte void");
-        this.trapDescription.put(RoomType.PIT,"");
-        this.trapDescription.put(RoomType.PIT,"");
-        //TODO add description
+        this.trapDescription.put(RoomType.PIT,"You trip and fall into a deep chasm.");
+        this.trapDescription.put(RoomType.FLOODED,"You slip on the wet floor and become prey to a monster hiding in the deep waters.");
+        this.trapDescription.put(RoomType.TRAP,"You enter the room and hear a mechanical sound, After which you are impaled by spikes.");
     }
 
     public int getHp() {
         return hp;
     }
 
+    /**
+     *de take commande
+     * dit chech of de player de item mag opnemen en het niet de buiten de regels valt
+     */
     public int take(String name) {
         double currentweight=0;
-        for (Item i : bag)
-            currentweight += i.getWeight();
+        for (int i = 0;i < bag.size();i++)
+            currentweight += bag.get(i).getWeight();
         Item item = currentRoom.getItem(name);
 
         if(currentweight+item.getWeight() > maxWeight) return ITEM_TO_HEAVY;
@@ -52,12 +55,14 @@ public class Player {
         if (item==null) return ITEM_NOTPRESENT;
         return ITEM_NOTMOVEABLE;
     }
-
+    /**
+     *de drop functie.
+     */
     public int drop(String name){
-        for (Item item : bag){
-            if (item.getName().equals(name)){
-                currentRoom.addItem(item);
-                bag.remove(item);
+        for (int i = 0; i < bag.size(); i++) {
+            if (bag.get(i).getName().equals(name)){
+                currentRoom.addItem(bag.get(i));
+                bag.remove(bag.get(i));
                 return ITEM_DROPPED;
             }
         }
@@ -65,8 +70,9 @@ public class Player {
     }
     public int takeDamage(){
         String description = trapDescription.get(currentRoom.getType());
-        if(hp >0) {
-            hp--;
+        hp--;
+
+        if(hp > 0) {
             System.out.println(description);
             return ALIVE;
         }
@@ -90,17 +96,20 @@ public class Player {
     }
 
     public void setCurrentRoom(Room currentRoom) {
+        /** collection frequency telt het aantal occurrences van van een object/string/int in een lijst en geeft het aantal terug */
         int gemCount = Collections.frequency(bag,gem);
         this.previousRoom = this.currentRoom;
         this.currentRoom = currentRoom;
 
+        /**
+         *checkt of de player het correcte aantal gems heeft die nodig is voor naar de volgende floor te gaan.
+         */
         if (this.currentRoom.getType().equals(RoomType.FINISH)&&currentRoom.getFloor()==gemCount) {
             this.canGoNextFloor=true;
         }
     }
     public void goBack(){
         this.currentRoom = this.previousRoom;
-        System.out.println();
     }
 
 

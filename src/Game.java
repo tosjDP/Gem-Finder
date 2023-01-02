@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *  This class is the main class of the "World of Zuul" application. 
- *  "World of Zuul" is a very simple, text based adventure game.  Users 
+ *  This class is the main class of my game.
+ *  "my game is a very simple, text based adventure game.  Users
  *  can walk around some scenery. That's all. It should really be extended 
  *  to make it more interesting!
  * 
@@ -32,29 +32,27 @@ public class Game {
     private boolean win = false;
 
     /**
-     * ++
-     * Create the game and initialise its internal map.
+     1. roept de parser op
+     2. maakt een player aan (name, hp, gem item, max weigth)
+     3. maakt mijn Verschillende floors aan (maar 1 atm door bu)
+     4. set the huidige floor en de starting room
      */
     public Game() {
         parser = new Parser();
-        player = new Player("Spelunker", 3, gem, 20);
+        player = new Player("Tosj", 5, gem, 20);
         initializeData();
-        floors.add(new Floor(1, 9, 3, 1, items, gem,2));
-        floors.add(new Floor(2,10,4,2,items,gem,2));
-        floors.add(new Floor(3,10,5,2,items,gem,2));
+        floors.add(new Floor(1, 15, 10, 1, items, gem,10));
         currentFloor = floors.get(0);
         player.setCurrentRoom(currentFloor.getRooms()[0][0]);
 
     }
 
     /**
-     * Main play routine.  Loops until end of play.
+     begint de main loop dit gaat door tot de game stop
      */
     public void play() {
         printWelcome();
 
-        // Enter the main command loop.  Here we repeatedly read commands and
-        // execute them until the game is over.
 
         boolean finished = false;
         while (!finished) {
@@ -63,17 +61,15 @@ public class Game {
         }
 
         if (win) {
-            //TODO add winning text
-            System.out.println("win");
+            System.out.println("Congratulations on winning the game, if you want to increase (or decrease you weakling) you can edit the player and the floors.");
         } else {
-            //TODO add losing text
-            System.out.println("lose");
+            System.out.println("Sucks to be you, you lost the game as expected. Maybe try Tetris, better luck next time.go e");
         }
         System.out.println("Thank you for playing my game! Good bye.");
     }
 
     /**
-     * Print out the opening message for the player.
+     * de opening message voor de player.
      */
     private void printWelcome() {
         System.out.println();
@@ -83,12 +79,13 @@ public class Game {
         System.out.println();
         printLocationInfo();
     }
-
+    /**
+     * prints de loctie van de player info over de kamer en de bag
+     */
     private void printLocationInfo() {
-        System.out.println(player.getCurrentRoom().getType());
         System.out.println("Player hp: " + player.getHp());
         System.out.println("currentfloor: " + floors.indexOf(currentFloor));
-        System.out.println(player.getName() + " is " + player.getCurrentRoom().getLongDescription());
+        System.out.println(player.getName() + ", " + player.getCurrentRoom().getLongDescription());
         System.out.println(player.getBagDescription());
         System.out.println();
     }
@@ -134,6 +131,10 @@ public class Game {
 
         return wantToQuit;
     }
+    /**
+     * het take commando
+     * gaat door elke loopwaar nodig is voor elk item
+     */
 
     private void take(Command command) {
         if (!command.hasSecondWord()) {
@@ -155,7 +156,9 @@ public class Game {
 
         }
     }
-
+    /**
+     * deze functie laat toe een item te droppe en check of dat mogelijk is
+     */
     private void drop(Command command) {
         if (!command.hasSecondWord()) {
             System.out.println("drop what?");
@@ -185,9 +188,12 @@ public class Game {
             System.out.println("His command words are:");
             System.out.println("   " + parser.showCommands());
         }
+    /**
+     * het look commando  roept de current room aan en geeft deze terug aan de player
+     */
 
         private void look () {
-            System.out.println(player.getName() + " is " + player.getCurrentRoom().getLongDescription());
+            System.out.println(player.getName() + ", " + player.getCurrentRoom().getLongDescription());
         }
 
         private void eat () {
@@ -211,6 +217,9 @@ public class Game {
             // Try to leave current room.
             Room nextRoom = player.getCurrentRoom().getExit(direction);
 
+            /**
+             * de back functie.
+             */
             if (direction.equals("back")) {
                 player.goBack();
                 printLocationInfo();
@@ -223,11 +232,25 @@ public class Game {
                     int result = player.takeDamage();
                     if (result == player.DEAD)
                     wantToQuit = true;
+
+                    /**
+                     * de teleport functie , als de player in een teleport room komt zal hij naar een random kamer in de array worden verplaatst
+                     */
                 } else if (player.getCurrentRoom().getType().equals(RoomType.TELEPORT)) {
+                    /**
+                     * Math.Random maakt randon double aan tussen o,1
+                     * De vermeningvuldiging met floorsize zorgt ervoor dat het een double getal wordt tussen 0 & floorsize wordt
+                     * Math.floor rond af deze af naar beneden
+                     * (int) maakt van de double een int
+                     * en deze int kan gebruik worden als coordinaat
+                     */
                     int x = (int) Math.floor(Math.random() * (currentFloor.getFloorSize()));
                     int y = (int) Math.floor(Math.random() * (currentFloor.getFloorSize()));
                     player.setCurrentRoom(this.currentFloor.getRooms()[x][y]);
                 }
+                /**
+                 * deze stuurt de player naar de volgende floor
+                 */
                 if (player.isCanGoNextFloor()) {
                     int index = floors.indexOf(currentFloor);
                     if (index == floors.size() - 1) {
@@ -238,6 +261,7 @@ public class Game {
                         currentFloor = floors.get(index + 1);
                         player.setCurrentRoom(currentFloor.getRooms()[0][0]);
                         player.setCanGoNextFloor(false);
+                        System.out.println("You fit the gem(s) into the door and it unlocks, allowing you to move to the next floor.");
                     }
                 }
                 printLocationInfo();
@@ -263,6 +287,9 @@ public class Game {
             Game game = new Game();
             game.play();
         }
+    /**
+     * in deze functie maak ik mijn items aan
+     */
         private void initializeData () {
             items.add(new Item("cake", "hmm jummy cake", 0.5));
             items.add(new Item("Fedora", "youre a real chad if you wear one of these", 0.2));
